@@ -82,7 +82,11 @@ WSGI_APPLICATION = 'djangojokes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'jokes',
+        'USER': 'postgres',
+        'PASSWORD': 'V7UC9beg!',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
 
