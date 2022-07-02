@@ -1,5 +1,4 @@
-from django.db import models
-
+from django.conf import settings
 from django.urls import reverse
 
 from common.utils.text import unique_slug
@@ -15,6 +14,9 @@ class Joke(models.Model):
     )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+    settings.AUTH_USER_MODEL, on_delete=models.PROTECT
+)
 
     def get_absolute_url(self):
         return reverse('jokes:detail', args=[str(self.pk)])
@@ -49,8 +51,8 @@ class Category(models.Model):
     def __str__(self):
         return self.category
 
-class Meta:
-    verbose_name_plural = 'Categories'
+    class Meta:
+        verbose_name_plural = 'Categories'
 
 
 class Tag(models.Model):
@@ -73,5 +75,5 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag
 
-class Meta: 
-    ordering = ['tag']
+    class Meta: 
+        ordering = ['tag']

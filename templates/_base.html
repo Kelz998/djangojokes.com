@@ -36,6 +36,14 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Log in</a>
         </li>
+        {% if not user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account_login' %}">Log in</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account_signup' %}">Sign up</a>
+          </li>
+        {% else %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
              role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -43,12 +51,16 @@
             Me
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">My Account</a>
+            <a class="dropdown-item" href="{% url 'my-account' %}">My Account</a>
             <a class="dropdown-item" href="#">My Django Jokes</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Log out</a>
+            <form method="post" action="{% url 'account_logout' %}">
+              {% csrf_token %}
+              <button class="btn dropdown-item">Log out</button>
+            </form>
           </div>
         </li>
+      {% endif %}
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search"
@@ -61,6 +73,20 @@
   </nav>
 </header>
 <main class="m-4 pb-5">
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <div class="alert message{{ message.tags }} alert-dismissible" role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="close" data-dismiss="alert"
+          aria-label="Close">
+          <i class="fas fa-window-close"></i>
+        </button>
+      </div>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
   {% block main %}<h2>Welcome!</h2>{% endblock %}
 </main>
 <footer class="fixed-bottom bg-light row">
@@ -70,6 +96,11 @@
         <ul class="nav">
           <li class="nav-item"><a class="nav-link" href="{% url 'pages:about-us' %}">About</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/">Admin</a>
+          </li>
+          {% endif %}
         </ul>
       </nav>
     </div>
